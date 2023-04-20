@@ -1,0 +1,30 @@
+
+
+For RTO for a single AZ outage, an RTO of one hour for this incident would be reasonable.
+
+
+Recovery Time Objective (RTO):
+00:00 - Problem happens (0 minutes)
+00:05 - An amount of time passes before an alert triggers (5 minutes)
+00:06 - Alert triggers on-all staff (1 minute)
+00:16 - On-call staff may need to get out of bed, get to computer, log in, log onto VPN (10 minutes)
+00:26 - On-call staff starts diagnosing issue (10 minutes)
+00:41 - Root cause is discovered (15 minutes)
+00:46 - Remediation started (5 minutes)
+00:56 - Remediation completed (10 minutes)
+Total time: 56 minutes
+
+
+For the minimum RTO of a single outage: 1 - 2 mins, we will have a 24/7 monitoring or support team available in the datacenters. Whenever one AZ fails, automatic failover takes place.  Each AZ runs on its own physically distinct, independent infrastructure and is engineered to be highly reliable. Amazon RDS automatically switches to a standby replica in the standby Availability Zone because we have enabled Multi-AZ. The time it takes for the failover to complete depends on the database activity and other conditions at the time the primary DB instance became unavailable. The responsible person will get the remote access and will try to fix the outage as well as we will have a documented recovery procedure which should be immediately followed as soon as there is an outage. Highly automated machine conversion and orchestration enable Recovery Time Objectives (RTOs) of minutes. Also we can use enable AWS Config to track where we may be creating drift using Config rules, which can create systems that enforce the disaster recovery strategies and create alerts if they detect drift. Also, we can use read replica for increased scalability and to maintain database availability in the such times to prevent us from AZ failures and at the time of RPO or RTO we can promote that replica so that our services are not excessively affected.
+
+
+The Minimum RTO for a single region outage in a multi-region deployment may take up to 10 - 45 mins:
+When a complete region outage occurs, a support staff needs to manually promote the read replica in the secondary region to the primary or master database.  This requires manual intervention.  Also, asynchronous replication exists.  We update the application DB url with the new one. If this happens at night, we should safely assume that it takes at-least 5-10 mins for someone to getup and login to AWS console.  10-15 minutes for someone to diagnose the problem, 10-15 mins to figure out the root cause.  Another 10-20 mins to actually fix the issue.
+
+
+The Minimum RPO for a single AZ outage : 0 mins
+Because the AZ is Multi-AZ configured, we have a synchronous standby copy of the primary database, so there would be no loss of data.
+
+Minimum RPO for a single region outage : 0 mins
+There would be no data loss because we have a complete read replica in another region or a standby region. 
+
